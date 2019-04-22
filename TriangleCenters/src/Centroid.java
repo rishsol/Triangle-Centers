@@ -61,22 +61,19 @@ public class Centroid extends RandomTriangle
 	}
 	*/
 	
-
-	
-	
 	public void paintComponent(Graphics h)
 	{
 		super.paintComponent(h);
 		Graphics2D h2D = (Graphics2D) h;
 		
-		h2D.setColor(Color.BLACK);
-		h2D.draw(new Line2D.Double(xPoints[0],  yPoints[0], (int) centroidXPoints[1], (int) centroidYPoints[1]));
+		h2D.setColor(Color.BLUE);
+		h2D.draw(new Line2D.Double(xPoints[0],  yPoints[0], centroidXPoints[1], centroidYPoints[1]));
 		
 		h2D.setColor(Color.RED);
-		h2D.draw(new Line2D.Double(xPoints[1],  yPoints[1], (int) centroidXPoints[2],(int) centroidYPoints[2]));
+		h2D.draw(new Line2D.Double(xPoints[1],  yPoints[1], centroidXPoints[2], centroidYPoints[2]));
 		
-		h2D.setColor(Color.CYAN);
-		h2D.draw(new Line2D.Double(xPoints[2],  yPoints[2], (int) centroidXPoints[0],(int) centroidYPoints[0]));
+		h2D.setColor(Color.GREEN);
+		h2D.draw(new Line2D.Double(xPoints[2],  yPoints[2], centroidXPoints[0], centroidYPoints[0]));
 		
 		//h.setColor(Color.GREEN);
 		//h.fillOval((int) findCentroidPoint().getX(), (int) findCentroidPoint().getY(), 10, 10);	

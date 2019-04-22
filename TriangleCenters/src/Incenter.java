@@ -1,7 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Point;
 import java.awt.geom.Line2D;
 
 import javax.swing.JFrame;
@@ -10,10 +9,10 @@ public class Incenter extends RandomTriangle
 {
     static double[] xIncenterPoints = new double[3];
     static double[] yIncenterPoints = new double[3];
-    static double[] incenterPoint = new double[2];
     static double[] sideLengths = new double[3];
     static double perimeter = 0;
-   // static double[] angles = new double[3];
+    static double[] incenterPoint = new double[2];
+
 	public Incenter(int[] xCoordinates, int[] yCoordinates, double[] xIncPoints, double[] yIncPoints)
 	{
 	  super(xPoints, yPoints);
@@ -36,12 +35,7 @@ public class Incenter extends RandomTriangle
 	  }
 	  sideLengths[2] = distance(xPoints[0], xPoints[2], yPoints[0], yPoints[2]);
 	}
-	/*
-	public static double[] getsideLengths()
-	{
-	  return sideLengths;
-	}
-	*/
+	
 	public static double getPerimeter()
 	{
 	  for(int i = 0; i < sideLengths.length; i++)
@@ -50,14 +44,13 @@ public class Incenter extends RandomTriangle
 	  return perimeter;
 	}
 	
-	public static void getIncenter()
-	{
-	  double incX = (sideLengths[1] * xPoints[0]) +  (sideLengths[2] * xPoints[1]) + (sideLengths[0] * xPoints[2])/(getPerimeter());
-	  double incY = (sideLengths[1] * yPoints[0]) +  (sideLengths[2] * yPoints[1]) + (sideLengths[0] * yPoints[2])/(getPerimeter());
-      incenterPoint[0] = incX;	
-      incenterPoint[1] = incY;
-	}
 	
+	public static void fillIncenterPoint()
+	{
+	  incenterPoint[0] = ((sideLengths[0] * xPoints[2]) +  (sideLengths[1] * xPoints[1]) + (sideLengths[2] * xPoints[0]))/(getPerimeter());
+	  incenterPoint[1] = ((sideLengths[0] * yPoints[2]) +  (sideLengths[1] * yPoints[1]) + (sideLengths[2] * yPoints[0]))/(getPerimeter());
+	}
+
 	public static double findSlope(double x1, double x2, double y1, double y2)
 	{
 	  return (y2 - y1)/(x2 - x1);
@@ -79,29 +72,30 @@ public class Incenter extends RandomTriangle
 	}
 	public static void fillXandYIncenterPoints()
 	{
-	  double m1 = 	findSlope(xPoints[0], incenterPoint[0], yPoints[0], incenterPoint[1]);
-	  double m2 =  findSlope(xPoints[1], xPoints[2], yPoints[1], yPoints[2]);
+	  double m1 = 	findSlope(xPoints[2], incenterPoint[0], yPoints[0], incenterPoint[1]);
+	  double m2 =  findSlope(xPoints[0], xPoints[1], yPoints[0], yPoints[1]);
 			  
-	  xIncenterPoints[0] = findIntersectionTwoLinesX(m1, m2, findYIntercept(m1, xPoints[0], yPoints[0]), 
+	  xIncenterPoints[0] = findIntersectionTwoLinesX(m1, m2, findYIntercept(m1, xPoints[2], yPoints[2]), 
+			  findYIntercept(m2, xPoints[0], yPoints[0])); 
+	  
+	 yIncenterPoints[0] = findIntersectionTwoLinesY(m1, xPoints[2], findYIntercept(m1, xPoints[0], yPoints[0])); 
+	 
+	 m1 = findSlope(xPoints[0], incenterPoint[0], yPoints[0], incenterPoint[1]);
+	 m2 = findSlope(xPoints[1], xPoints[2], yPoints[1], yPoints[2]);
+	  
+	  xIncenterPoints[1] = findIntersectionTwoLinesX(m1, m2, findYIntercept(m1, xPoints[0], yPoints[0]), 
 			  findYIntercept(m2, xPoints[1], yPoints[1])); 
 	  
-	  yIncenterPoints[0] = findIntersectionTwoLinesY(m1, xPoints[0], findYIntercept(m1, xPoints[0], yPoints[0])); 
+	  yIncenterPoints[1] = findIntersectionTwoLinesY(m1, xPoints[0], findYIntercept(m1, xPoints[1], yPoints[1])); 
 	  
 	  m1 = findSlope(xPoints[1], incenterPoint[0], yPoints[1], incenterPoint[1]);
 	  m2 = findSlope(xPoints[0], xPoints[2], yPoints[0], yPoints[2]);
 	  
-	  xIncenterPoints[1] = findIntersectionTwoLinesX(m1, m2, findYIntercept(m1, xPoints[1], yPoints[1]), 
-			  findYIntercept(m2, xPoints[2], yPoints[2])); 
-	  
-	  yIncenterPoints[1] = findIntersectionTwoLinesY(m1, xPoints[1], findYIntercept(m1, xPoints[1], yPoints[1])); 
-	  
-	  m1 = findSlope(xPoints[2], incenterPoint[0], yPoints[2], incenterPoint[1]);
-	  m2 = findSlope(xPoints[0], xPoints[1], yPoints[0], yPoints[1]);
-	  
-	  xIncenterPoints[2] = findIntersectionTwoLinesX(m1, m2, findYIntercept(m1, xPoints[2], yPoints[2]), 
+	  xIncenterPoints[2] = findIntersectionTwoLinesX(m1, m2, findYIntercept(m1, xPoints[1], yPoints[1]), 
 			  findYIntercept(m2, xPoints[0], yPoints[0])); 
 	  
-	  yIncenterPoints[0] = findIntersectionTwoLinesY(m1, xPoints[2], findYIntercept(m1, xPoints[2], yPoints[2])); 
+	  yIncenterPoints[2] = findIntersectionTwoLinesY(m1, xPoints[1], findYIntercept(m1, xPoints[0], yPoints[0])); 
+	  
 	}
 	
 	public static double[] getxIncenterPoints()
@@ -118,15 +112,18 @@ public class Incenter extends RandomTriangle
 	{
 	  super.paintComponent(h);
 	  Graphics2D h2D = (Graphics2D) h;
-	  
+	  	  
 	  h2D.setColor(Color.BLUE);
-	  h2D.draw(new Line2D.Double(xPoints[0], yPoints[0], xIncenterPoints[0], yIncenterPoints[0]));
+	  h2D.draw(new Line2D.Double(xPoints[0], yPoints[0], xIncenterPoints[1], yIncenterPoints[1]));
+	  
+	  //h2D.setColor(Color.MAGENTA);
+	  //h2D.draw(new Line2D.Double(xPoints[1], yPoints[1], incenterPoint[0], incenterPoint[1]));
 	  
 	  h2D.setColor(Color.RED);
-	  h2D.draw(new Line2D.Double(xPoints[1], yPoints[1], xIncenterPoints[1], yIncenterPoints[1]));
+	  h2D.draw(new Line2D.Double(xPoints[1], yPoints[1], xIncenterPoints[2], yIncenterPoints[2]));
 	  
 	  h2D.setColor(Color.GREEN);
-	  h2D.draw(new Line2D.Double(xPoints[2], yPoints[2], xIncenterPoints[2], yIncenterPoints[2]));
+	  h2D.draw(new Line2D.Double(xPoints[2], yPoints[2], xIncenterPoints[0], yIncenterPoints[0]));
 	}
 	
 	public static void main(String args[])

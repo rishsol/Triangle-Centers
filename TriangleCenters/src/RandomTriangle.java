@@ -20,7 +20,7 @@ public class RandomTriangle extends JPanel //draws a triangle with a randomly ge
 		int count = 0;
 		while (count < 2) 
 		{
-			int rand = (int) (Math.random() * 657) + 25;
+			int rand = (int) (Math.random() * 657) + 100;
 			if (rand != 683 || rand != xPoints[count - 1]) 
 			{
 				xPoints[count + 1] = rand;
@@ -35,7 +35,7 @@ public class RandomTriangle extends JPanel //draws a triangle with a randomly ge
 		yPoints[0] = 384; //one y point will always be in the middle of a JFrame with a width of 384
 		int count = 0;
 		while (count < 2) {
-			int rand = (int) (Math.random() * 359) + 25;
+			int rand = (int) (Math.random() * 359) + 100;
 			if (rand != 384 || rand != yPoints[count - 1]) 
 			{
 				yPoints[count + 1] = rand;
